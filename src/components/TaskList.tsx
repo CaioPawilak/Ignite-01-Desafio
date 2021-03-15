@@ -14,16 +14,34 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
+
+
+
   function handleCreateNewTask() {
-    // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+
+    if(!newTaskTitle)return;
+
+    const newTask:Task = {
+           id:Math.floor(Math.random()* (0+100)) ,
+           title:newTaskTitle,
+           isComplete:false
+    }
+      setTasks([...tasks,newTask])
+      setNewTaskTitle('');
+      console.log(tasks)
+
   }
 
   function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const taskToChek = tasks.map(task=>task.id===id?{...task, isComplete:!task.isComplete}: task)
+  
+    setTasks(taskToChek)
   }
 
   function handleRemoveTask(id: number) {
-    // Remova uma task da listagem pelo ID
+    const taskToDelete = tasks.filter(idTask=>{return idTask.id!==id} )
+    
+    setTasks([...taskToDelete])
   }
 
   return (
@@ -35,7 +53,7 @@ export function TaskList() {
           <input 
             type="text" 
             placeholder="Adicionar novo todo" 
-            onChange={(e) => setNewTaskTitle(e.target.value)}
+            onChange={(e) =>setNewTaskTitle(e.target.value)}
             value={newTaskTitle}
           />
           <button type="submit" data-testid="add-task-button" onClick={handleCreateNewTask}>
